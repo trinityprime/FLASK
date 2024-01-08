@@ -8,7 +8,7 @@ class Customer(User):
         self,
         first_name,
         last_name,
-        gender,
+        gender,     
         membership,
         remarks,
         email,

@@ -60,6 +60,7 @@ def create_user():
         db = shelve.open("user.db", "c")
         try:
             users_dict = db["Users"]
+            user.count_id = db['User_count']
         except:
             print("Error in retrieving Users from user.db.")
 
@@ -72,6 +73,8 @@ def create_user():
         )
         users_dict[user.get_user_id()] = user
         db["Users"] = users_dict
+        db['User_count'] = user.count_id
+
 
         db.close()
         return redirect(url_for("retrieve_users"))
@@ -141,6 +144,20 @@ def update_user(id):
         update_user_form.remarks.data = user.get_remarks()
 
         return render_template("updateUsers.html", form=update_user_form)
+
+
+@app.route("/deleteUser/<int:id>", methods=["POST"])
+def delete_user(id):
+    users_dict = {}
+    db = shelve.open("users.db", "w")
+    users_dict = db["Users"]
+
+    users_dict.pop(id)
+
+    db["Users"] = users_dict
+    db.close()
+
+    return redirect(url_for("retrieve_users"))
 
 
 @app.route("/index")
